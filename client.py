@@ -21,13 +21,17 @@ MSG = ' '.join(args.message) # The message to send to the server
 
 def encode_message(message):
     # Add an application-layer header to the message that the VPN can use to forward it
-    raise NotImplementedError("Your job is to fill this function in. Remove this line when you're done.")
+    app_header = str(VPN_IP) + " " + str(VPN_PORT) + " " + str(SERVER_IP) + " " + str(SERVER_PORT) 
+    message = app_header + " " + message; 
+
     return message
+
 
 print("client starting - connecting to VPN at IP", VPN_IP, "and port", VPN_PORT)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((VPN_IP, VPN_PORT))
     print(f"connection established, sending message '{encode_message(MSG)}'")
+    print(encode_message(MSG))
     s.sendall(bytes(MSG, 'utf-8'))
     print("message sent, waiting for reply")
     data = s.recv(1024).decode("utf-8")

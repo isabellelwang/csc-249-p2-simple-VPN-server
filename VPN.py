@@ -17,7 +17,12 @@ def parse_message(message):
     message = message.decode("utf-8")
     # Parse the application-layer header into the destination SERVER_IP, destination SERVER_PORT,
     # and message to forward to that destination
-    raise NotImplementedError("Your job is to fill this function in. Remove this line when you're done.")
+
+    split_data = message.split(" ")
+    SERVER_IP = message[2]
+    SERVER_PORT = message[3]
+    message = message[4]
+
     return SERVER_IP, SERVER_PORT, message
 
 ### INSTRUCTIONS ###
@@ -31,3 +36,15 @@ def parse_message(message):
 
 # The VPN server must additionally print appropriate trace messages and send back to the
 # client appropriate error messages.
+
+print("VPN starting - connecting to client at IP", VPN_IP, " and port ", VPN_PORT)
+with socket.socket(socket.AF_INET, socket.SOCKET_STREAM) as s: 
+    #binds to VPN IP and VPN Port
+    s.bind((VPN_IP, VPN_PORT))
+    #listens for the client
+    s.listen()
+    #accepts connection with client
+    conn, addr = s.accept()
+    
+
+
