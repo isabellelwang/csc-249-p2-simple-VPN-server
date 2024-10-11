@@ -54,26 +54,24 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
     with conn: 
         print(f"Connected established with {addr}")
-        while True: 
-            client_data = conn.recv(1024)
-            print(f"Received response from client: '{client_data}' [{len(client_data)} bytes]")
+        #while True: 
+        client_data = conn.recv(1024)
+        print(f"Received response from client: '{client_data}' [{len(client_data)} bytes]")
 
-            if not client_data:
-                break 
-            
-            print("Parsing the message from the client...")
-            SERVER_IP, SERVER_PORT, MSG = parse_message(client_data)
+            # if not client_data:
+            #     break    
+        print("Parsing the message from the client...")
+        SERVER_IP, SERVER_PORT, MSG = parse_message(client_data)
     
-            print("creating a new socket and connecting to server at IP", SERVER_IP, "and port", SERVER_PORT)
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as o:
-                o.connect((SERVER_IP, SERVER_PORT)) #connect the socket to the server ip and port
-                print(f"connection established, sending message to server ' {MSG}")
-                o.sendall(bytes(MSG, 'utf-8')) #encode the parsed message and send to the server
-                print("message sent to server, waiting for echo response")
-                server_data = o.recv(1024).decode('utf-8') #receive the data from the server and decode the data
-                print(f"Received response from server: '{server_data}' [{len(server_data)} bytes]")
-            
-            print("sending to client '{server_data}'")
+        print("creating a new socket and connecting to server at IP", SERVER_IP, "and port", SERVER_PORT)
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as o:
+            o.connect((SERVER_IP, SERVER_PORT)) #connect the socket to the server ip and port
+            print(f"connection established, sending message to server ' {MSG}")
+            o.sendall(bytes(MSG, 'utf-8')) #encode the parsed message and send to the server
+            print("message sent to server, waiting for echo response")
+            server_data = o.recv(1024).decode('utf-8') #receive the data from the server and decode the data
+            print(f"Received response from server: '{server_data}' [{len(server_data)} bytes]")
+            print(f"sending to client: '{server_data}'")
             conn.sendall(bytes(server_data, 'utf-8')) #Sending the data from the server to the client using the outer socket
     
     print("VPN is done!")
